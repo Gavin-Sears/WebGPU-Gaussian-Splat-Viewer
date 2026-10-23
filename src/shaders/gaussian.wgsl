@@ -1,5 +1,6 @@
 struct VertexOutput {
     @builtin(position) position: vec4<f32>,
+    @location(0) size: vec2<f32>,
     //TODO: information passed from vertex shader to fragment shader
 };
 
@@ -45,11 +46,15 @@ fn vs_main(@builtin(vertex_index) vIdx: u32, @builtin(instance_index) iIdx: u32)
     let corner = corners[vIdx];
 
     out.position = vec4f(corner * splat.size + splat.ndc, 0.0, 1.0);
-    
+    out.size = splat.size;
+
     return out;
 }
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    return vec4<f32>(1.);
+    // so, the instructions tell you to do one thing (use width and height as r and g), 
+    // but then show another for the render (only uses height for g). Keep note of this for if you
+    // want to recreate the image in the render, but for my README, I will use the full x for r and y for g
+    return vec4<f32>(in.size.x, in.size.y, 0.0, 1.0);
 }
