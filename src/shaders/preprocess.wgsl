@@ -75,6 +75,8 @@ var<storage, read> gaussians: array<Gaussian>;
 // splats output
 @group(1) @binding(1)
 var<storage, read_write> splats: array<Splat>;
+@group(1) @binding(2)
+var<storage, read> sh_coefs: array<u32>;
 
 // read_write
 @group(2) @binding(0)
@@ -106,8 +108,13 @@ fn q_to_mat(q: vec4<f32>) -> mat3x3<f32> {
 
 /// reads the ith sh coef from the storage buffer 
 fn sh_coef(splat_idx: u32, c_idx: u32) -> vec3<f32> {
-    //TODO: access your binded sh_coeff, see load.ts for how it is stored
-    return vec3<f32>(0.0);
+    let sh_idx = (splat_idx * 48 + 3 * c_idx) / 2u;
+
+    let a = unpack2x16float(sh_coefs[sh_idx]);
+    let b = unpack2x16float(sh_coefs[sh_idx + 1u]);
+
+    if (c_idx % 2u == 1u) { return vec3f(a.y, b.x, b.y); }
+    return vec3f(a.x, a.y, b.x);
 }
 
 // spherical harmonics evaluation with Condon–Shortley phase
