@@ -1,7 +1,9 @@
 struct VertexOutput {
     @builtin(position) position: vec4<f32>,
-    @location(0) color: vec3<f32>,
-    //TODO: information passed from vertex shader to fragment shader
+    @interpolate(flat) @location(0) splatNdc: vec2<f32>,
+    @interpolate(flat) @location(1) conic: vec3<f32>,
+    @interpolate(flat) @location(2) op: f32,
+    @interpolate(flat) @location(3) color: vec3<f32>,
 };
 
 struct CameraUniforms {
@@ -46,6 +48,9 @@ fn vs_main(@builtin(vertex_index) vIdx: u32, @builtin(instance_index) iIdx: u32)
     let corner = corners[vIdx];
 
     out.position = vec4f(corner * splat.size + splat.ndc, 0.0, 1.0);
+    out.splatNdc = splat.ndc;
+    out.conic = splat.conic;
+    out.op = splat.op;
     out.color = splat.color;
 
     return out;
@@ -53,8 +58,12 @@ fn vs_main(@builtin(vertex_index) vIdx: u32, @builtin(instance_index) iIdx: u32)
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    // so, the instructions tell you to do one thing (use width and height as r and g), 
-    // but then show another for the render (only uses height for g). Keep note of this for if you
-    // want to recreate the image in the render, but for my README, I will use the full x for r and y for g
-    return vec4<f32>(in.color.rgb, 1.0);
+    let splatPixelPos = vec2<f32>(
+        (in.splatNdc.x * 0.5 + 0.5) * camera.viewport.x, 
+        (-in.splatNdc.y * 0.5 + 0.5) * camera.viewport.y
+    );
+
+    let offset = splatPixelPos - in.position.xy;
+
+    return vec4<f32>(offset.x, offset.y, 0.0, 1.0);
 }
