@@ -65,5 +65,15 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
     let offset = splatPixelPos - in.position.xy;
 
-    return vec4<f32>(offset.x, offset.y, 0.0, 1.0);
+    let conic_mat = mat2x2f(
+        vec2f(in.conic.x, in.conic.y),
+        vec2f(in.conic.y, in.conic.z)
+    );
+
+    let g = exp(-0.5 * dot(offset, conic_mat * offset));
+
+    let alpha = min(0.99, in.op * g);
+    if (alpha < (1.0 / 255.0)) { discard; }
+
+    return vec4<f32>(in.color * alpha, alpha);
 }
