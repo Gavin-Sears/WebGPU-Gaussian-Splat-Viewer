@@ -14,7 +14,7 @@ This live site will not have the bike and bonsai files included. To download the
 
 ### Demo Video
 
-<!-- Will be drag and dropped after committing this README -->
+https://github.com/user-attachments/assets/d7cc165e-f105-45d0-86d1-4b2674e460e9
 
 ## Overview
 
