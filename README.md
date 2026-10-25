@@ -12,7 +12,11 @@
 
 This live site will not have the bike and bonsai files included. To download them and try them out yourself, you can use this [Google Drive Folder](https://drive.google.com/drive/folders/1Fz0QhyDU12JTsl2e7umGi5iy_V9drrIW?usp=sharing).
 
-### Demo Video
+### Demo GIF and Video
+
+![Demo GIF](images/splat_demo.gif)
+
+Platforms like mobile won't display the demo video below without clicking the link, which is why I also provide the short GIF above.
 
 https://github.com/user-attachments/assets/d7cc165e-f105-45d0-86d1-4b2674e460e9
 
